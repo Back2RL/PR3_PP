@@ -1,30 +1,29 @@
 package engine;
 
+import java.awt.*;
+
 public class Engine implements Runnable {
-    public static final int WIDTH = 640;
-    public static final int HEIGHT = 480;
+    public static final int WIDTH = 1280;
+    public static final int HEIGHT = 720;
     public static final double SCALE = 1.0;
     public static final String TITLE = "Engine";
-
+    public static final int FRAME_CAP = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode().getRefreshRate();
+    public static final double MAX_DELTA_TIME = 1.0 / FRAME_CAP;
     private Game game;
     private Thread gameThread;
     private Window window;
     private Renderer renderer;
     private Input input;
-
-    public Window getWindow() {
-        return window;
-    }
-
-    public static final int FRAME_CAP = 60;
-    public static final double MAX_DELTA_TIME = 1.0 / FRAME_CAP;
     private boolean bIsRunning;
-
     private double GameTime = 0.0;
 
     public Engine(Game game) {
         bIsRunning = false;
         this.game = game;
+    }
+
+    public Window getWindow() {
+        return window;
     }
 
     public void start() {

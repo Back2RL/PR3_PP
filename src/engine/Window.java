@@ -39,8 +39,13 @@ public class Window {
     }
 
     public void update() {
-        g.drawImage(image, 0, 0, canvas.getWidth(), canvas.getHeight(), null);
-        bs.show();
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                g.drawImage(image, 0, 0, canvas.getWidth(), canvas.getHeight(), null);
+                bs.show();
+            }
+        });
     }
 
     public Canvas getCanvas() {
@@ -56,6 +61,5 @@ public class Window {
         bs.dispose();
         image.flush();
         frame.dispose();
-
     }
 }

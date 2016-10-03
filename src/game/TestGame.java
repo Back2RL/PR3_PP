@@ -8,12 +8,14 @@ import engine.gfx.Image;
 
 import java.awt.event.KeyEvent;
 
-public class Main extends Game {
+public class TestGame extends Game {
+
+    private int testX = 0;
 
     public static void main(String[] args) {
         // write your code here
         System.out.println(Thread.currentThread().getName() + ": Hello World!");
-        Engine engine = new Engine(new Main());
+        Engine engine = new Engine(new TestGame());
         engine.start();
     }
 
@@ -25,11 +27,13 @@ public class Main extends Game {
             System.out.println("A is down");
         }
 
+        testX = (int) (testX + 100*deltaTime) % en.WIDTH;
 
     }
 
     @Override
     public void render(Engine en, Renderer r) {
-        r.drawImage(testImage, 60, 200);
+
+        r.drawImage(testImage, testX, 50);
     }
 }
