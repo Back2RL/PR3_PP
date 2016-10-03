@@ -1,52 +1,61 @@
 package engine;
 
-/**
- * Created by Leo on 27.09.2016.
- */
-public class Engine {
+public class Engine implements Runnable {
     public static final int WIDTH = 640;
     public static final int HEIGHT = 480;
-    public static final String TITEL = "Engine";
-    public static final int FRAME_CAP = 10;
+    public static final double SCALE = 1.0;
+    public static final String TITLE = "Engine";
 
-    private boolean bIsRunning;
     private Game game;
+    private Thread gameThread;
+    private Window window;
+    private Renderer renderer;
+    private Input input;
+
+    public Window getWindow() {
+        return window;
+    }
+
+    public static final int FRAME_CAP = 60;
+    public static final double MAX_DELTA_TIME = 1.0 / FRAME_CAP;
+    private boolean bIsRunning;
 
     private double GameTime = 0.0;
 
-    public Engine() {
-
+    public Engine(Game game) {
         bIsRunning = false;
-        game = new Game();
+        this.game = game;
     }
 
     public void start() {
         if (bIsRunning) return;
-        run();
+
+        window = new Window(this);
+        renderer = new Renderer(this);
+        input = new Input(this);
+        gameThread = new Thread(this);
+        gameThread.start();
     }
 
-    public void stop() {
-        if (!bIsRunning) return;
-        bIsRunning = false;
-    }
-
-    private void run() {
+    @Override
+    public void run() {
         bIsRunning = true;
 
         GameTime = 0.0;
-        double startTime = 0;
-        double dt = 0;
+        double prevPartialSecond = 0;
+        double currentPartialSecond;
+
+        double startTime;
+        double dt;
         double lastTime = Time.getTimeSeconds();
 
         double passedFrameTime;
-        final double maxDeltaTime = 1.0 / FRAME_CAP;
 
-        final long sleepTime = 1;
-        final double sleepCompensation = 0.001 * sleepTime;
-
+        final long sleepTime = 0;
         while (bIsRunning) {
             startTime = Time.getTimeSeconds();
             dt = startTime - lastTime;
+            GameTime += dt;
             lastTime = startTime;
 
 
@@ -54,43 +63,40 @@ public class Engine {
                 stop();
             }*/
 
-            System.out.println(Math.round(1.0 / dt) + " fps; ");
-
-            game.input();
-            game.update();
-            Input.Update();
-            render();
+            game.update(this, dt);
+            input.update();
+            renderer.clear();
+            game.render(this, renderer);
+            window.update();
 
             passedFrameTime = Time.getTimeSeconds() - startTime;
-            System.out.println("Rendertime = " + passedFrameTime + "s");
-            while (passedFrameTime  +sleepCompensation < maxDeltaTime) {
-                try {
-                    Thread.sleep(sleepTime);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+
+            currentPartialSecond = GameTime - (int) GameTime;
+            if (currentPartialSecond < prevPartialSecond) {
+                System.out.println(Math.round(1.0 / dt) + " fps; ");
+                System.out.println(Thread.currentThread().getName() + ": Rendertime = " + passedFrameTime + "s");
+            }
+            prevPartialSecond = currentPartialSecond;
+
+            while (passedFrameTime < MAX_DELTA_TIME) {
+                if (sleepTime > 0) {
+                    try {
+                        Thread.sleep(sleepTime);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
                 passedFrameTime = Time.getTimeSeconds() - startTime;
             }
-
         }
     }
 
-    private void render() {
-
-        //RenderUtil.clearScreen();
-        game.render();
-        //Window.render();
+    public void stop() {
+        if (!bIsRunning) return;
+        bIsRunning = false;
     }
 
     private void cleanUp() {
-        //    Window.dispose();
+        window.cleanUp();
     }
-
-    /*public static void main(String[] args) {
-        System.out.println("starting engine...");
-      Window.createWindow(WIDTH, HEIGHT, TITEL + " " + WIDTH + "x" + HEIGHT);
-
-        MainComponent game = new MainComponent();
-        game.start();
-    }*/
 }
