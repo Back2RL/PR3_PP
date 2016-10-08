@@ -3,9 +3,9 @@ package engine;
 import java.awt.*;
 
 public class Engine implements Runnable {
-    public static final int WIDTH = 1280;
-    public static final int HEIGHT = 720;
-    public static final double SCALE = 1.0;
+    public static final int WIDTH = 320;
+    public static final int HEIGHT = 160;
+    public static final double SCALE = 2.0;
     public static final String TITLE = "Engine";
     public static final int FRAME_CAP = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode().getRefreshRate();
     public static final double MAX_DELTA_TIME = 1.0 / FRAME_CAP;

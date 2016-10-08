@@ -3,8 +3,8 @@ package engine;
 /**
  * Created by Leo on 27.09.2016.
  */
-public class Object {
-    private static long ObjectCounter = 0;
+public class AObject {
+    private static long counter = 0;
 
     private long ID;
 
@@ -12,8 +12,8 @@ public class Object {
         return ID;
     }
 
-    public Object() {
-        ObjectCounter++;
-        ID = ObjectCounter;
+    public AObject() {
+        counter++;
+        ID = counter;
     }
 }

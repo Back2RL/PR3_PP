@@ -15,8 +15,8 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
     private static boolean[] keys = new boolean[256];
     private static boolean[] prevKeys = new boolean[256];
 
-    public Input(Engine engine) {
-        this.engine = engine;
+    public Input(Engine en) {
+        this.engine = en;
         engine.getWindow().getCanvas().addKeyListener(this);
         engine.getWindow().getCanvas().addMouseListener(this);
         engine.getWindow().getCanvas().addMouseMotionListener(this);
