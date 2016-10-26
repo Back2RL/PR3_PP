@@ -11,6 +11,9 @@ import java.awt.event.KeyEvent;
 public class TestGame extends Game {
 
     private int testX = 0;
+    private int testY = 0;
+    private float mAxisForward = 0;
+    private float mAxisRight = 0;
 
     public static void main(String[] args) {
         // write your code here
@@ -23,17 +26,22 @@ public class TestGame extends Game {
 
     @Override
     public void update(Engine en, double deltaTime) {
-        if (Input.isKeyPressed(KeyEvent.VK_A)) {
-            System.out.println("A is down");
-        }
+        mAxisForward = (Input.isKeyDown(KeyEvent.VK_W) ? -1.0f : 0.0f)
+                + (Input.isKeyDown(KeyEvent.VK_S) ? 1.0f : 0.0f);
 
-        testX = (int) (testX + 100*deltaTime) % en.WIDTH;
+        mAxisRight = (Input.isKeyDown(KeyEvent.VK_A) ? -1.0f : 0.0f)
+                + (Input.isKeyDown(KeyEvent.VK_D) ? 1.0f : 0.0f);
+
+
+
+        testX = (int) (testX + mAxisRight * 100 * deltaTime) % en.WIDTH;
+        testY = (int) (testY + mAxisForward * 100 * deltaTime) % en.HEIGHT;
 
     }
 
     @Override
     public void render(Engine en, Renderer r) {
 
-        r.drawImage(testImage, testX, 50);
+        r.drawImage(testImage, testX, testY);
     }
 }
