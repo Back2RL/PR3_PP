@@ -10,10 +10,13 @@ import java.awt.event.KeyEvent;
 
 public class TestGame extends Game {
 
-    private int testX = 0;
-    private int testY = 0;
+    private float testX = 0;
+    private float testY = 0;
     private float mAxisForward = 0;
     private float mAxisRight = 0;
+
+    private float speedX = 0;
+    private float speedY = 0;
 
     public static void main(String[] args) {
         // write your code here
@@ -32,16 +35,22 @@ public class TestGame extends Game {
         mAxisRight = (Input.isKeyDown(KeyEvent.VK_A) ? -1.0f : 0.0f)
                 + (Input.isKeyDown(KeyEvent.VK_D) ? 1.0f : 0.0f);
 
+        float speed = 3.0f;
+        speedX = FInterp(speedX, mAxisRight * 1000, (float) deltaTime, speed);
+        speedY = FInterp(speedY, mAxisForward * 1000, (float) deltaTime, speed);
 
+        testX = testX + speedX * (float) deltaTime;
+        testY = testY + speedY * (float) deltaTime;
 
-        testX = (int) (testX + mAxisRight * 100 * deltaTime) % en.WIDTH;
-        testY = (int) (testY + mAxisForward * 100 * deltaTime) % en.HEIGHT;
+    }
 
+    float FInterp(float curr, float target, float dt, float speed) {
+        float diff = target - curr;
+        return curr + diff * dt * speed;
     }
 
     @Override
     public void render(Engine en, Renderer r) {
-
-        r.drawImage(testImage, testX, testY);
+        r.drawImage(testImage, (int) testX, (int) testY);
     }
 }

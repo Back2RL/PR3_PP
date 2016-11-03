@@ -3,9 +3,9 @@ package engine;
 import java.awt.*;
 
 public class Engine implements Runnable {
-    public static final int WIDTH = 320;
-    public static final int HEIGHT = 160;
-    public static final double SCALE = 2.0;
+    public static final int WIDTH = 1280;
+    public static final int HEIGHT = 720;
+    public static final double SCALE = 0.5;
     public static final String TITLE = "Engine";
     public static final int FRAME_CAP = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode().getRefreshRate();
     public static final double MAX_DELTA_TIME = 1.0 / FRAME_CAP;
@@ -48,6 +48,10 @@ public class Engine implements Runnable {
         double dt;
         double lastTime = Time.getTimeSeconds();
 
+        double renderStartTime;
+        double renderDt = 0;
+        double renderLastTime = Time.getTimeSeconds();
+
         double passedFrameTime;
 
         final long sleepTime = 0;
@@ -64,16 +68,22 @@ public class Engine implements Runnable {
 
             game.update(this, dt);
             input.update();
-            renderer.clear();
-            game.render(this, renderer);
-            window.update();
+            if (window.finishedDisplaying()) {
+                renderStartTime = Time.getTimeSeconds();
+                renderDt = renderStartTime - renderLastTime;
+                renderLastTime = renderStartTime;
+
+                renderer.clear();
+                game.render(this, renderer);
+                window.update();
+            }
 
             passedFrameTime = Time.getTimeSeconds() - startTime;
 
             currentPartialSecond = GameTime - (int) GameTime;
             if (currentPartialSecond < prevPartialSecond) {
-                System.out.println(Math.round(1.0 / dt) + " fps; ");
-                System.out.println(Thread.currentThread().getName() + ": Rendertime = " + passedFrameTime + "s");
+                System.out.println(Math.round(1.0 / dt) + " fps; " + Thread.currentThread().getName() + ": UpdateTime = " + passedFrameTime + "s");
+                System.out.println(Math.round(1.0 / renderDt) + " fps; " + Thread.currentThread().getName() + ": RenderTime = " + renderDt + "s");
             }
             prevPartialSecond = currentPartialSecond;
 

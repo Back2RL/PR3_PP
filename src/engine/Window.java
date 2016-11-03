@@ -16,6 +16,12 @@ public class Window {
     private Graphics g;
     private BufferStrategy bs;
 
+    private Thread RenderThread;
+
+    public boolean finishedDisplaying(){
+        return RenderThread == null || !RenderThread.isAlive();
+    }
+
     public Window(final Engine en) {
         image = new BufferedImage(en.WIDTH, en.HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
         canvas = new Canvas();
@@ -39,13 +45,11 @@ public class Window {
     }
 
     public void update() {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
+            RenderThread = new Thread(() -> {
                 g.drawImage(image, 0, 0, canvas.getWidth(), canvas.getHeight(), null);
                 bs.show();
-            }
-        });
+            });
+            RenderThread.start();
     }
 
     public Canvas getCanvas() {
