@@ -18,7 +18,7 @@ public class Window {
 
     private Thread RenderThread;
 
-    public boolean finishedDisplaying(){
+    public boolean finishedDisplaying() {
         return RenderThread == null || !RenderThread.isAlive();
     }
 
@@ -39,17 +39,25 @@ public class Window {
         frame.setResizable(false);
         frame.setVisible(true);
 
-        canvas.createBufferStrategy(2);
+        BufferCapabilities.FlipContents fc = BufferCapabilities.FlipContents.COPIED;
+        BufferCapabilities bc = new BufferCapabilities(new ImageCapabilities(true), new ImageCapabilities(true), fc);
+
+        try {
+            canvas.createBufferStrategy(2,bc);
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }
+        //canvas.createBufferStrategy(3);
         bs = canvas.getBufferStrategy();
         g = bs.getDrawGraphics();
     }
 
     public void update() {
-            RenderThread = new Thread(() -> {
-                g.drawImage(image, 0, 0, canvas.getWidth(), canvas.getHeight(), null);
-                bs.show();
-            });
-            RenderThread.start();
+        RenderThread = new Thread(() -> {
+            g.drawImage(image, 0, 0, canvas.getWidth(), canvas.getHeight(), null);
+            bs.show();
+        });
+        RenderThread.start();
     }
 
     public Canvas getCanvas() {

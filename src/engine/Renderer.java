@@ -36,10 +36,18 @@ public class Renderer {
     public void clear() {
         for (int index = 0; index < pixels.length; index += 4) {
             // Color: ABGR
+            // white
             pixels[index] = (byte) 255;
-            pixels[index + 1] = 0;
-            pixels[index + 2] = 0;
-            pixels[index + 3] = 0;
+            pixels[index + 1] = (byte) 255;
+            pixels[index + 2] = (byte) 255;
+            pixels[index + 3] = (byte) 255;
+
+            // black
+            /*
+            pixels[index + 1] = (byte) 0;
+            pixels[index + 2] = (byte) 0;
+            pixels[index + 3] = (byte) 0;
+             */
 
         }
     }

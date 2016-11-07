@@ -5,18 +5,20 @@ import engine.Game;
 import engine.Input;
 import engine.Renderer;
 import engine.gfx.Image;
+import engine.math.Double;
 
 import java.awt.event.KeyEvent;
 
 public class TestGame extends Game {
 
-    private float testX = 0;
-    private float testY = 0;
-    private float mAxisForward = 0;
-    private float mAxisRight = 0;
+    private double testX = 0;
+    private double testY = 0;
+    private double mAxisForward = 0;
+    private double mAxisRight = 0;
+    private static final double accelSpeed = 2.0f;
 
-    private float speedX = 0;
-    private float speedY = 0;
+    private double speedX = 0;
+    private double speedY = 0;
 
     public static void main(String[] args) {
         // write your code here
@@ -25,7 +27,7 @@ public class TestGame extends Game {
         engine.start();
     }
 
-    private Image testImage = new Image("/test.png");
+    private Image testImage = new Image("/x.png");
 
     @Override
     public void update(Engine en, double deltaTime) {
@@ -35,19 +37,16 @@ public class TestGame extends Game {
         mAxisRight = (Input.isKeyDown(KeyEvent.VK_A) ? -1.0f : 0.0f)
                 + (Input.isKeyDown(KeyEvent.VK_D) ? 1.0f : 0.0f);
 
-        float speed = 3.0f;
-        speedX = FInterp(speedX, mAxisRight * 1000, (float) deltaTime, speed);
-        speedY = FInterp(speedY, mAxisForward * 1000, (float) deltaTime, speed);
 
-        testX = testX + speedX * (float) deltaTime;
-        testY = testY + speedY * (float) deltaTime;
+        speedX = Double.fInterp(speedX, mAxisRight * 1000, deltaTime, accelSpeed);
+        speedY = Double.fInterp(speedY, mAxisForward * 1000, deltaTime, accelSpeed);
+
+        testX = testX + speedX * deltaTime;
+        testY = testY + speedY * deltaTime;
 
     }
 
-    float FInterp(float curr, float target, float dt, float speed) {
-        float diff = target - curr;
-        return curr + diff * dt * speed;
-    }
+
 
     @Override
     public void render(Engine en, Renderer r) {
