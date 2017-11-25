@@ -18,10 +18,6 @@ public class Window {
 
     private Thread RenderThread;
 
-    public boolean finishedDisplaying() {
-        return RenderThread == null || !RenderThread.isAlive();
-    }
-
     public Window(final Engine en) {
         image = new BufferedImage(en.WIDTH, en.HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
         canvas = new Canvas();
@@ -43,13 +39,17 @@ public class Window {
         BufferCapabilities bc = new BufferCapabilities(new ImageCapabilities(true), new ImageCapabilities(true), fc);
 
         try {
-            canvas.createBufferStrategy(2,bc);
+            canvas.createBufferStrategy(2, bc);
         } catch (AWTException e) {
             e.printStackTrace();
         }
         //canvas.createBufferStrategy(3);
         bs = canvas.getBufferStrategy();
         g = bs.getDrawGraphics();
+    }
+
+    public boolean finishedDisplaying() {
+        return RenderThread == null || !RenderThread.isAlive();
     }
 
     public void update() {

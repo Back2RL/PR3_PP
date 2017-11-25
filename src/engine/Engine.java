@@ -7,7 +7,7 @@ public class Engine implements Runnable {
     public static final int HEIGHT = 720;
     public static final double SCALE = 0.5;
     public static final String TITLE = "Engine";
-    public static final int FRAME_CAP = 300;//GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode().getRefreshRate();
+    public static final int FRAME_CAP = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode().getRefreshRate();
     public static final double MAX_DELTA_TIME = 1.0 / FRAME_CAP;
     private Game game;
     private Thread gameThread;
